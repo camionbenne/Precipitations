@@ -1,0 +1,34 @@
+model:
+  _target_: anemoi.models.models.encoder_processor_decoder.AnemoiModelEncProcDec
+
+num_channels: 1024
+
+processor:
+  _target_: anemoi.models.layers.processor.TransformerProcessor
+  num_layers: 16
+  num_chunks: 2
+
+encoder:
+  _target_: anemoi.models.layers.mapper.GraphTransformerForwardMapper
+  trainable_size: 8
+  sub_graph_edge_attributes: ${model.attributes.edges}
+  num_chunks: 1
+  mlp_hidden_ratio: 4
+  num_heads: 16
+
+decoder:
+  _target_: anemoi.models.layers.mapper.GraphTransformerBackwardMapper
+  trainable_size: 8
+  sub_graph_edge_attributes: ${model.attributes.edges}
+  num_chunks: 1
+  mlp_hidden_ratio: 4
+  num_heads: 16
+
+residual:
+   _target_: anemoi.models.layers.residual.SkipConnection
+
+attributes:
+  edges:
+  - edge_length
+  - edge_dirs
+  nodes: []
