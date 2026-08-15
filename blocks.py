@@ -35,14 +35,15 @@ class EPD(tf.keras.Model):
     """
     """-------------------------Encoder-------------------------------"""
 
-    x = self.conv3a(input_tensor) # output (B,T = 64 , C = , H = 66, W = 61)
+    x = self.conv3a(input_tensor) # output (B,C = 64, H = 66, W = 61)
     x = self.bn2a(x, training=training) # don't change shape ig
     x = tf.nn.relu(x)#don't change either
 
-    """-------------------------Encoder-------------------------------"""
+    """-------------------------Decoder-------------------------------"""
+    #Decoder input = (B,C = 64, H = 66, W = 61)
 
-    x = x + self.cbam(self.conv2a(x),ratio = 1)  # à remplir
-    x = self.pixel_shuffle(x,block_size = , data_format = "NCWH")
+    x = x + self.cbam(self.conv2a(x),ratio = 1)  # à remplir / no shape change
+    x = self.pixel_shuffle(x,block_size =x.shape[1]**0.5 , data_format = "NCWH") #est-ce  utile ?
     return x
 
 block = EPD((8,3,3))
