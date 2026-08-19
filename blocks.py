@@ -1,6 +1,6 @@
 import tensorflow as tf
 from cbam import CBAM
-
+from Static_fields import StaticFields
 
 """This is my own code"""
 
@@ -21,6 +21,8 @@ class EPD(tf.keras.Model):
 
     """---------------Decoder Block 1----------------------"""
     self.pixel_shuffle = tf.nn.depth_to_space() #(args are input, block_size, data_format='NHWC', name=None)
+
+  """---------------Decoder Block 2----------------------"""
 
   def call(self, input_tensor, training=False):
     """Fonction feedforward model
@@ -43,7 +45,9 @@ class EPD(tf.keras.Model):
     #Decoder input = (B,C = 64, H = 66, W = 61)
 
     x = x + self.cbam(self.conv2a(x),ratio = 1)  # à remplir / no shape change
-    x = self.pixel_shuffle(x,block_size =x.shape[1]**0.5 , data_format = "NCWH") #est-ce  utile ?
+    #x = self.pixel_shuffle(x,block_size =x.shape[1]**0.5 , data_format = "NCWH") #est-ce  utile 
+    x += StaticFields() #no shape change
+    x = 
     return x
 
 block = EPD((8,3,3))
